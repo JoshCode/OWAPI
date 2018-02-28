@@ -1,18 +1,12 @@
-## OW API
-
-[Donate to keep OWAPI alive](https://www.patreon.com/sundwarf)
-
+# OW API Docker
 This server is a simple way to get read-only information about player statistics in the game
-Overwatch by Blizzard.
-**A live version runs on https://owapi.net.**  
+Overwatch by Blizzard, based on https://github.com/SunDwarf/OWAPI, but made in Docker container form for convenience.
 
 ## Game data
-
 This API does not aim to expose data about the heroes, maps, etc in the game. For that, use 
-https://github.com/jamesmcfadden/overwatch-api. 
+https://github.com/jamesmcfadden/overwatch-api.
  
 ## API Docs
-
 OWAPI has a very simple RESTful API to get information.  
 As the API is read-only, the only method required is `GET`.  
 
@@ -21,47 +15,19 @@ See the [doc](/api.md) for more information.
 
 ### Running an instance
 
-OWAPI has a few requirements:
+OWAPI-Docker has a few requirements:
 
- - A Python version >3.5
- - Probably a Linux-based server; I don't know about the viability of running it on Windows.
+ - Docker v17.12.x (tested on community edition build c97c6d6)
+ - Only tested on amd64 architectures
  
 **Installation steps:**
 
- 1. **Clone the repository.**
+ 1. **Pull the Docker image.**
  
-     `git clone https://github.com/SunDwarf/OWAPI.git`
+     `docker pull joshcode/owapi`
      
- 2. **Setup a Redis server.**
+ 2. **Run the Docker image.**
  
-     Redis should be running on the default port - 6379. You can override this in config.yml;
-     however.
-     Redis is used for caching lots of data so that there's not a 10 second delay on
-     EVERY request as the data is fetched and scraped; it is essential.
-     
-     For Debian/Ubuntu, you can install one with:
-     `sudo apt install redis-server`
-     
-     You can enable it with:
-     `sudo systemctl enable redis-server && sudo systemctl start redis-server`.
-     
- 4. **Install the requirements.**
+     `docker run -p 4444:4444 --name owapi joshcode/owapi`
 
-     For debian-based systems, run this first:
-        `sudo apt install libxslt-dev python3-dev build-essential zlib1g-dev pkg-config`
-
-     To set up the virtualenv:
-     `pipenv install`
-
- 5. **Copy and tweak the example config file.**
-
-    `cp config.example.yml config.yml`
-     
- 6. **Start the OWAPI server.**
- 
-     `PYTHONPATH=. pipenv run asphalt run config.yml`
-     
-     The server is now running on http://localhost:4444/
-          
-     Note: If you want the full speedups from Kyoukai you must run with uvloop enabled:
-     `PYTHONPATH=. pipenv run asphalt run -l uvloop config.yml`
+     This starts a Docker container with the name 'owapi' from the image 'joshcode/owapi', and it maps Docker port 4444 to host port 4444. If you want to run the server on a different port, change the second port number.
